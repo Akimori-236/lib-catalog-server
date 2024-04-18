@@ -1,0 +1,14 @@
+{
+  "name": "lib-catalog-server",
+  "version": "1.0.0",
+  "description": "Rewrite library catalog server in NodeJS",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wee Seng",
+  "license": "ISC",
+  "dependencies": {
+    "http": "^0.0.1-security"
+  }
+}

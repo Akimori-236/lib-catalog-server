@@ -17,8 +17,8 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(urlencodedParser); //attach body-parser middleware
 app.use(bodyParser.json()); //parse json data
 
-// GET ALL data
-app.get("/", (req, resp) => {
+// GET yamaha data
+app.get("/yamaha", (req, resp) => {
     resp.status(200);
     resp.type("json");
     resp.send(dummyData);

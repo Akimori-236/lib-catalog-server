@@ -4,10 +4,10 @@ const cors = require("cors");
 const dummyData = require("./json/YMHPage1.json");
 
 const host = "localhost";
-const port = 3000;
+const port = 8080;
 const app = express();
 const corsOptions = {
-    origin: "http://localhost:8080",
+    origin: "http://localhost:3000",
     optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));

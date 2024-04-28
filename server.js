@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dummyData = require("./json/YMHPage1.json");
 
-const host = "localhost";
+const host = "0.0.0.0";
 const port = 8080;
 const app = express();
 const corsOptions = {
@@ -16,6 +16,13 @@ app.use(cors(corsOptions));
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(urlencodedParser); //attach body-parser middleware
 app.use(bodyParser.json()); //parse json data
+
+// GET test
+app.get("/", (req, resp) => {
+    resp.status(200);
+    resp.type("json");
+    resp.send(JSON.stringify({ message: "Hello World" }));
+});
 
 // GET yamaha data
 app.get("/yamaha", (req, resp) => {

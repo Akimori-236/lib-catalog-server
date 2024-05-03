@@ -6,7 +6,7 @@ const mongodb = require("../services/mongodb.js");
 
 const app = express();
 const corsOptions = {
-    origin: "http://localhost:3000",
+    origin:  ["http://localhost:5173", "http://localhost:8081", "http://localhost:8082"],
     optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));

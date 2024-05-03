@@ -1,5 +1,6 @@
 # base image to use
 FROM node:20
+RUN apt-get update
 
 # set the base directory for the rest of the dockerfile
 WORKDIR /app

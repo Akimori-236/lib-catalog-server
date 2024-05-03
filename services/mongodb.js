@@ -58,6 +58,12 @@ const mongodb = {
                 });
         });
     },
+    search: (searchTerm, callback) => {
+        // TODO: search function
+    },
+    addYoutubeLink: (link, callback) => {
+        // TODO: add link based on title/id
+    },
 };
 
 module.exports = mongodb;

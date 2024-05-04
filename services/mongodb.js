@@ -32,8 +32,9 @@ const mongodb = {
             await client.connect();
             const db = client.db("sheetmusic");
             const collection = db.collection("windBand");
-            const result = await collection.find({}).skip(offset).limit(limit).toArray();
-            console.log(result);
+            const total = await collection.countDocuments();
+            const data = await collection.find({}).skip(offset).limit(limit).toArray();
+            const result = { total, data };
             callback(null, result);
         } catch (e) {
             console.error(e);
@@ -42,7 +43,7 @@ const mongodb = {
             await client.close();
         }
     },
-    
+
     getTotalCount: async (callback) => {
         try {
             await client.connect();

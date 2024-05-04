@@ -6,7 +6,11 @@ const mongodb = require("../services/mongodb.js");
 
 const app = express();
 const corsOptions = {
-    origin:  ["http://localhost:5173", "http://localhost:8081", "http://localhost:8082"],
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:8081",
+        "http://localhost:8082",
+    ],
     optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
@@ -18,32 +22,56 @@ app.use(bodyParser.json()); //parse json data
 
 // GET test
 app.get("/serverhealth", (req, resp) => {
+    console.log(req.url);
     resp.status(200).json({ isRunning: true });
 });
 
 app.get("/dbhealth", (req, resp) => {
-    mongodb.test((err) => {
-        if (err) {
-            resp.status(500).json({ error: "Internal Server Error" });
+    console.log(req.url);
+    mongodb.isUp((isUp) => {
+        if (isUp) {
+            resp.status(200).json({ isHealthy: isUp });
         } else {
-            resp.status(200).json({ message: "ok" });
+            resp.status(500).json({ isHealthy: isUp });
         }
+        console.log(isUp);
     });
 });
 
 app.get("/api/dummy", (req, resp) => {
-    resp.status(200).json(dummyData);
+    console.log(req.url);
+    let limit = parseInt(req.query.limit);
+    let offset = parseInt(req.query.offset);
+
+    if (isNaN(limit) || limit < 1) {
+        limit = 10;
+    }
+    if (isNaN(offset) || offset < 0) {
+        offset = 0;
+    }
+    console.log(limit, offset);
+    var slicedData = dummyData.slice(offset, offset + limit);
+    resp.status(200).json(slicedData);
 });
 
-// GET yamaha data
-app.get("/api/", (req, resp) => {
-    var limit = req.query.limit;
-    var offset = req.query.offset;
+// GET data
+app.get("/api", (req, resp) => {
+    console.log(req.url);
+    let limit = parseInt(req.query.limit);
+    let offset = parseInt(req.query.offset);
+
+    if (isNaN(limit) || limit < 1) {
+        limit = 10;
+    }
+    if (isNaN(offset) || offset < 0) {
+        offset = 0;
+    }
+    console.log(limit, offset);
     mongodb.getLimited(limit, offset, (err, results) => {
         if (err) {
             resp.status(500).json({ error: "Internal Server Error" });
         } else {
-            resp.status(200).json(results);
+            resp.status(200).type("application/json").send(results);
         }
     });
 });

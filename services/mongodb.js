@@ -42,6 +42,21 @@ const mongodb = {
             await client.close();
         }
     },
+    
+    getTotalCount: async (callback) => {
+        try {
+            await client.connect();
+            const db = client.db("sheetmusic");
+            const collection = db.collection("windBand");
+            const count = await collection.countDocuments();
+            callback(null, count);
+        } catch (err) {
+            console.error("Error occurred while getting total count:", err);
+            callback(err, null);
+        } finally {
+            await client.close();
+        }
+    },
 
     search: (searchTerm, callback) => {
         // TODO: search function

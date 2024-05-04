@@ -76,4 +76,15 @@ app.get("/api", (req, resp) => {
     });
 });
 
+app.get("/api/total", (req, resp) => {
+    console.log(req.url);
+    mongodb.getTotalCount((err, count) => {
+        if (err) {
+            resp.status(500).json({ error: "Internal Server Error" });
+        } else {
+            resp.status(200).type("application/json").send({ total: count });
+        }
+    });
+});
+
 module.exports = app;

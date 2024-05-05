@@ -59,15 +59,13 @@ app.get("/api", (req, resp) => {
     console.log(req.url);
     let limit = parseInt(req.query.limit);
     let offset = parseInt(req.query.offset);
-
     if (isNaN(limit) || limit < 1) {
         limit = 10;
     }
     if (isNaN(offset) || offset < 0) {
         offset = 0;
     }
-    console.log(limit, offset);
-    mongodb.getLimited(limit, offset, (err, results) => {
+    mongodb.getPaginated(limit, offset, (err, results) => {
         if (err) {
             resp.status(500).json({ error: "Internal Server Error" });
         } else {
@@ -76,9 +74,10 @@ app.get("/api", (req, resp) => {
     });
 });
 
-app.get("/api/total", (req, resp) => {
+app.get("/api/search", (req, resp) => {
     console.log(req.url);
-    mongodb.getTotalCount((err, count) => {
+    let searchTerm = req.query.q;
+    mongodb.search(searchTerm, (err, count) => {
         if (err) {
             resp.status(500).json({ error: "Internal Server Error" });
         } else {

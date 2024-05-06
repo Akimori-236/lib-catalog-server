@@ -77,7 +77,21 @@ app.get("/api", (req, resp) => {
 app.get("/api/search", (req, resp) => {
     console.log(req.url);
     let searchTerm = req.query.q;
-    mongodb.search(searchTerm, (err, count) => {
+    let limit = parseInt(req.query.limit);
+    let offset = parseInt(req.query.offset);
+    if (isNaN(limit) || limit < 1) {
+        limit = 10;
+    }
+    if (isNaN(offset) || offset < 0) {
+        offset = 0;
+    }
+    if (searchTerm.length < 3) {
+        resp.status(400).json({
+            error: "Search term must be at least 3 characters",
+        });
+        return;
+    }
+    mongodb.search(searchTerm, limit, offset, (err, count) => {
         if (err) {
             resp.status(500).json({ error: "Internal Server Error" });
         } else {

@@ -1,10 +1,10 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const URI = process.env.MONGO_URL;
-const DATABASE = "sheetmusic";
-const COLLECTION = "windBand";
-const MAX_POOL_SIZE = 5;
-const MIN_POOL_SIZE = 2;
+const URI = process.env.MONGO_URI;
+const DATABASE = process.env.DATABASE;
+const COLLECTION = process.env.COLLECTION;
+const MAX_POOL_SIZE = process.env.MAX_POOL_SIZE;
+const MIN_POOL_SIZE = process.env.MIN_POOL_SIZE;
 
 const CLIENT = new MongoClient(URI, {
     maxPoolSize: MAX_POOL_SIZE,
@@ -65,8 +65,30 @@ const mongodb = {
         }
     },
 
-    search: (searchTerm, callback) => {
-        // TODO: search function
+    search: async (searchTerm, limit, offset, callback) => {
+        try {
+            const db = await connectToDatabase();
+            const collection = db.collection(COLLECTION);
+            const result = await collection
+                .find({
+                    $or: [
+                        { title: { $regex: searchTerm, $options: "i" } },
+                        { publisher: { $regex: searchTerm, $options: "i" } },
+                        { composer: { $regex: searchTerm, $options: "i" } },
+                        { id: searchTerm },
+                    ],
+                })
+                .sort({ releaseDate: 1 })
+                .skip(offset)
+                .limit(limit)
+                .toArray();
+            callback(null, result);
+        } catch (e) {
+            console.error(e);
+            callback(e.message, null);
+        } finally {
+            await CLIENT.close();
+        }
     },
 
     addYoutubeLink: (link, callback) => {
